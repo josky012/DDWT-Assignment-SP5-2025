@@ -2,41 +2,66 @@
 
 @{
     var db = Database.Open("BoardGame");
-    var sql = "SELECT * FROM BoardGame ORDER BY Name";
-    var data = db.Query(sql);
+    var q = Request["q"];
+    var sql = "SELECT * FROM BoardGame";
+
+    if (!String.IsNullOrWhiteSpace(q))
+    {
+        sql += " WHERE Name LIKE @0";
+    }
+
+    sql += " ORDER BY Name";
+    var data = db.Query(sql, "%" + q + "%");
 }
 
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
     <title>Board Games</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body>
-    <h2>Board Games</h2>
-    <p>This table lists all board games in the database.</p>
+<body class="p-4">
+    <div class="container">
+        <h2 class="mb-3">Board Games</h2>
+        <p class="mb-4">This table lists all board games in the database.</p>
 
-    <table border="1">
-        <tr>
-            <th>Name</th>
-            <th>Year Published</th>
-            <th>Min Players</th>
-            <th>Max Players</th>
-            <<th>Mfg Play Time</th>
-            <th>Com Play Time</th>
-        </tr>
+        <form method="get" class="row g-2 mb-4">
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="q" value="@q" placeholder="Search by name" />
+            </div>
+            <div class="col-sm-4 d-grid">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
 
-        @foreach (var row in data)
-        {
-            <tr>
-                <td>@row.Name</td>
-                <td>@row.YearPublished</td>
-                <td>@row.MinPlayers</td>
-                <td>@row.MaxPlayers</td>
-                <td>@row.MfgPlayTime</td>
-                <td>@row.ComMinPlayTime - @row.ComMaxPlayTime</td>
-            </tr>
-        }
-    </table>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Year Published</th>
+                        <th>Min Players</th>
+                        <th>Max Players</th>
+                        <th>Mfg Play Time</th>
+                        <th>Com Play Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in data)
+                    {
+                        <tr>
+                            <td>@row.Name</td>
+                            <td>@row.YearPublished</td>
+                            <td>@row.MinPlayers</td>
+                            <td>@row.MaxPlayers</td>
+                            <td>@row.MfgPlayTime</td>
+                            <td>@row.ComMinPlayTime - @row.ComMaxPlayTime</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
-
