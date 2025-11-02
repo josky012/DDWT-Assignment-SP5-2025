@@ -1,0 +1,22 @@
+﻿@using WebMatrix.Data;
+
+@{
+    var db = Database.Open("BoardGame");
+    var sql = "SELECT * FROM BoardGame ORDER BY Name";
+    var data = db.Query(sql);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Board Games</title>
+</head>
+<body>
+    <h2>Board Games</h2>
+
+    @foreach (var row in data)
+    {
+        <p>@row.Name</p>
+    }
+</body>
+</html>
