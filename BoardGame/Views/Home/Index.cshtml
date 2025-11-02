@@ -13,13 +13,30 @@
 </head>
 <body>
     <h2>Board Games</h2>
+    <p>This table lists all board games in the database.</p>
 
-    @foreach (var row in data)
-    {
-        <p>@row.Name</p>
-    }
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Year Published</th>
+            <th>Min Players</th>
+            <th>Max Players</th>
+            <<th>Mfg Play Time</th>
+            <th>Com Play Time</th>
+        </tr>
+
+        @foreach (var row in data)
+        {
+            <tr>
+                <td>@row.Name</td>
+                <td>@row.YearPublished</td>
+                <td>@row.MinPlayers</td>
+                <td>@row.MaxPlayers</td>
+                <td>@row.MfgPlayTime</td>
+                <td>@row.ComMinPlayTime - @row.ComMaxPlayTime</td>
+            </tr>
+        }
+    </table>
 </body>
-
-
 </html>
 
