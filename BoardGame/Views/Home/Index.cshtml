@@ -6,19 +6,21 @@
     var view = (Request["view"] ?? "table").ToLower();
 
     // List of games
-    var sql = "SELECT BGGID, Name, YearPublished, MinPlayers, MaxPlayers, " +
-              "MfgPlayTime, ComMinPlayTime, ComMaxPlayTime, Family, imagePath " +
-              "FROM BoardGame";
+    var sql =
+        "SELECT BG.*, GF.Family " +
+        "FROM BoardGame BG " +
+        "LEFT JOIN GameFamily GF ON BG.Family = GF.FamilyCode";
 
     if (!String.IsNullOrWhiteSpace(q))
     {
-        sql += " WHERE Name LIKE @0";
+        sql += " WHERE BG.Name LIKE @0";
     }
 
-    sql += " ORDER BY Name";
+    sql += " ORDER BY BG.Name";
 
     var data = db.Query(sql, "%" + q + "%");
 }
+
 
 <!DOCTYPE html>
 <html>
@@ -50,9 +52,10 @@
             </div>
         </form>
 
+
         @if (view == "card")
         {
-            <!-- Card view-->
+            <!-- Card view -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
                 @foreach (var row in data)
                 {
@@ -75,7 +78,7 @@
                                 </p>
                                 <p class="card-text small mb-1"><strong>Family:</strong> @(row.Family ?? "—")</p>
 
-                                <p class="card-text small mb-0">
+                                <p class="card-text small mb-2">
                                     <strong>Categories:</strong>
                                     @{
                                         var catList = "";
@@ -88,6 +91,12 @@
                                     }
                                     @catList
                                 </p>
+
+                                <!-- Description from Board Game-->
+                                <p class="card-text small mb-0">
+                                    <strong>Description:</strong><br />
+                                    @(String.IsNullOrWhiteSpace((string)row.Description) ? "—" : (string)row.Description)
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -98,15 +107,33 @@
         {
             <!-- Table view-->
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-bordered align-middle table-sm">
                     <thead class="table-light">
-                        <tr>
+                        <tr class="text-nowrap">
                             <th>Name</th>
+                            <th>Description</th>
                             <th>Year Published</th>
+                            <th>Game Weight</th>
                             <th>Min Players</th>
                             <th>Max Players</th>
                             <th>Mfg Play Time</th>
-                            <th>Com Play Time</th>
+                            <th>Com Min</th>
+                            <th>Com Max</th>
+                            <th>Mfg Age Rec</th>
+                            <th>Com Age Rec</th>
+                            <th>Language Ease</th>
+                            <th>Best Players</th>
+                            <th>Num Owned</th>
+                            <th>Num Want</th>
+                            <th>Num Wish</th>
+                            <th>Num Expansions</th>
+                            <th>Num Implementations</th>
+                            <th>Rank Board</th>
+                            <th>Rank Strategy</th>
+                            <th>Rank Family</th>
+                            <th>Rank Thematic</th>
+                            <th>Family</th>
+                            <th>imagePath</th>
                             <th>Details</th>
                         </tr>
                     </thead>
@@ -115,12 +142,35 @@
                         {
                             <tr>
                                 <td>@row.Name</td>
+                                <td style="min-width:260px;max-width:520px;white-space:normal;">
+                                    @(String.IsNullOrWhiteSpace((string)row.Description) ? "—" : (string)row.Description)
+                                </td>
                                 <td>@(row.YearPublished ?? "—")</td>
+                                <td>@(row.GameWeight ?? "—")</td>
                                 <td>@row.MinPlayers</td>
                                 <td>@row.MaxPlayers</td>
-                                <td>@row.MfgPlayTime</td>
-                                <td>@row.ComMinPlayTime - @row.ComMaxPlayTime</td>
-                                <td> <a class="btn btn-sm btn-outline-primary" href="/Views/Home/Details.cshtml?id=@row.BGGID">Details</a></td>
+                                <td>@(row.MfgPlayTime ?? "—")</td>
+                                <td>@(row.ComMinPlayTime ?? "—")</td>
+                                <td>@(row.ComMaxPlayTime ?? "—")</td>
+                                <td>@(row.MfgAgeRec ?? "—")</td>
+                                <td>@(row.ComAgeRec ?? "—")</td>
+                                <td>@(row.LanguageEase ?? "—")</td>
+                                <td>@(row.BestPlayers ?? "—")</td>
+                                <td>@(row.NumOwned ?? "—")</td>
+                                <td>@(row.NumWant ?? "—")</td>
+                                <td>@(row.NumWish ?? "—")</td>
+                                <td>@(row.NumExpansions ?? "—")</td>
+                                <td>@(row.NumImplementations ?? "—")</td>
+                                <td>@(row.RankInboardgame ?? "—")</td>
+                                <td>@(row.RankInstrategygames ?? "—")</td>
+                                <td>@(row.RankInfamilygames ?? "—")</td>
+                                <td>@(row.RankInthematic ?? "—")</td>
+                                <td>@(row.Family ?? "—")</td>
+                                <td class="text-truncate" style="max-width:260px;">@(row.imagePath ?? "—")</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       href="/Views/Home/Details.cshtml?id=@row.BGGID">Details</a>
+                                </td>
                             </tr>
                         }
                     </tbody>

@@ -4,10 +4,12 @@
     var db = Database.Open("BoardGame");
     var id = Request["id"];
 
-    var sql = "SELECT BGGID, Name, Description, YearPublished, " +
-              "MinPlayers, MaxPlayers, MfgPlayTime, ComMinPlayTime, ComMaxPlayTime, " +
-              "Family, imagePath " +
-              "FROM BoardGame WHERE BGGID = @0";
+    var sql = "SELECT BG.BGGID, BG.Name, BG.Description, BG.YearPublished, " +
+              "BG.MinPlayers, BG.MaxPlayers, BG.MfgPlayTime, BG.ComMinPlayTime, BG.ComMaxPlayTime, " +
+              "GF.Family, BG.imagePath " +
+              "FROM BoardGame BG " +
+              "LEFT JOIN GameFamily GF ON BG.Family = GF.FamilyCode " +
+              "WHERE BG.BGGID = @0";
 
     var game = db.QuerySingle(sql, id);
 }
