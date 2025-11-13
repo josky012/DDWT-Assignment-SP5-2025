@@ -92,10 +92,15 @@
                                     @catList
                                 </p>
 
-                                <!-- Description from Board Game-->
+                                <!-- Description from Board Game -->
                                 <p class="card-text small mb-0">
                                     <strong>Description:</strong><br />
                                     @(String.IsNullOrWhiteSpace((string)row.Description) ? "—" : (string)row.Description)
+                                </p>
+                                <!-- Edit button added -->
+                                <p class="mt-3">
+                                    <a class="btn btn-sm btn-outline-primary" href="/Views/Home/Details.cshtml?id=@row.BGGID">Details</a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="/Views/Home/Edit.cshtml?id=@row.BGGID">Edit</a>
                                 </p>
                             </div>
                         </div>
@@ -135,6 +140,8 @@
                             <th>Family</th>
                             <th>imagePath</th>
                             <th>Details</th>
+                            <th>Edit</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -167,10 +174,8 @@
                                 <td>@(row.RankInthematic ?? "—")</td>
                                 <td>@(row.Family ?? "—")</td>
                                 <td class="text-truncate" style="max-width:260px;">@(row.imagePath ?? "—")</td>
-                                <td>
-                                    <a class="btn btn-sm btn-outline-primary"
-                                       href="/Views/Home/Details.cshtml?id=@row.BGGID">Details</a>
-                                </td>
+                                <td> <a class="btn btn-sm btn-outline-primary" href="/Views/Home/Details.cshtml?id=@row.BGGID">Details</a> </td>
+                                <td> <a class="btn btn-sm btn-outline-secondary" href="/Views/Home/Edit.cshtml?id=@row.BGGID">Edit</a> </td>
                             </tr>
                         }
                     </tbody>
